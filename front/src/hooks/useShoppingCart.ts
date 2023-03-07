@@ -1,13 +1,16 @@
 import { Producto } from "../types/Producto";
-import { atom, useAtom } from "jotai";
+import { useAtom } from "jotai";
+import { atomWithStorage } from "jotai/utils";
 import { ItemCarrito } from "../types/ItemCarrito";
 
-export function useShoppingCart() {
-  const cartAtom = atom<ItemCarrito[]>([]);
+//FM: En vez de usar atom, uso atomWithStorage para que de una vez me lo guarde en LocalStorage
+const cartAtom = atomWithStorage<ItemCarrito[]>("lsProduct", []);
 
+export function useShoppingCart() {
   const [shoppingCart, setShoppingCart] = useAtom(cartAtom);
 
-  const addItemToCart = (product: Producto) => {
+  const addItemToCart = async (product: Producto) => {
+    await new Promise((r) => setTimeout(r, 1000));
     const copyCarrito = [...shoppingCart];
 
     const productExistente = copyCarrito.find((l) => l.product._id === product._id);
@@ -24,7 +27,8 @@ export function useShoppingCart() {
     setShoppingCart(copyCarrito);
   };
 
-  const removeItemToCart = (product: Producto) => {
+  const removeItemToCart = async (product: Producto) => {
+    await new Promise((r) => setTimeout(r, 1000));
     const copyCarrito = [...shoppingCart];
 
     const indexProductExistente = copyCarrito.findIndex((l) => l.product._id === product._id);

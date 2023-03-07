@@ -11,7 +11,8 @@ import { Container, Stack } from "@mui/system";
 import { ItemCarrito } from "../types/ItemCarrito";
 import { Producto } from "../types/Producto";
 import Products from "../services/products";
-import { useShoppingCart } from "../context/useShoppingCart";
+import { useShoppingCart } from "../hooks/useShoppingCart";
+import { useMutation } from "@tanstack/react-query";
 
 export const calcularStock = (id: number, countInStock: number, carrito: ItemCarrito[]) => {
   let count = countInStock;
@@ -27,16 +28,27 @@ export const calcularStock = (id: number, countInStock: number, carrito: ItemCar
 
 export default function Product() {
   const { id } = useParams();
-  // const { carrito, addCarrito } = useContext(ProductContext);
+  // const { carrito: shoppingCart, addCarrito: addItemToCart } = useContext(ProductContext);
   const { shoppingCart, addItemToCart } = useShoppingCart();
+
   const { isLoading, data: product } = Products.GetProductById(+(id ?? -1));
   const { _id, name, image, description, countInStock } = product ?? {};
 
+  const { isLoading: isLoadingAdd, mutate } = useMutation(async (product: Producto) => {
+    await addItemToCart(product);
+  });
+
   const onClickAddCart = (product: Producto) => {
-    addItemToCart(product);
+    mutate(product, {
+      onSuccess: async () => {
+        //
+      },
+    });
   };
 
-  if (isLoading) return <Loading />;
+  console.log(isLoadingAdd, "isLoadingAdd");
+
+  if (isLoading || isLoadingAdd) return <Loading />;
 
   return (
     <Container maxWidth="md" component="main">

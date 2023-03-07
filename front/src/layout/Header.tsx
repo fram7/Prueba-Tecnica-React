@@ -1,15 +1,15 @@
 import { AppBar, Badge, Box, IconButton, Toolbar, Typography } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-// import { useContext } from "react";
-// import { ProductContext } from "../context/ProductContext";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import { ItemCarrito } from "../types/ItemCarrito";
-import { useShoppingCart } from "../context/useShoppingCart";
+import { useShoppingCart } from "../hooks/useShoppingCart";
+// import { useContext } from "react";
+// import { ProductContext } from "../context/ProductContext";
 
 export default function Header() {
   const navigate = useNavigate();
 
-  // const { carrito } = useContext(ProductContext);
+  // const { carrito: shoppingCart } = useContext(ProductContext);
   const { shoppingCart } = useShoppingCart();
 
   const contarCarritos = (carrito: ItemCarrito[]) => {

@@ -15,29 +15,42 @@ import { calcularStock } from "../../pages/Product";
 import ConfirmModal from "../confirmModal/ConfirmModal";
 import { useState } from "react";
 import { Producto } from "../../types/Producto";
-import { ItemCarrito } from "../../types/ItemCarrito";
-import { typeProductContext } from "../../context/ProductContext";
+import { useMutation } from "@tanstack/react-query";
+import Loading from "../loading/Loading";
+import { useShoppingCart } from "../../hooks/useShoppingCart";
 
-interface TableShoppingCartProps {
-  carrito: ItemCarrito[];
-  addCarrito: (product: Producto) => void;
-  removeCarrito: (product: Producto) => void;
-}
+interface TableShoppingCartProps {}
 
-export default function TableShoppingCart({
-  carrito,
-  addCarrito,
-  removeCarrito,
-}: TableShoppingCartProps) {
-  const addCount = (product: Producto) => {
-    addCarrito(product);
+export default function TableShoppingCart({}: TableShoppingCartProps) {
+  const { shoppingCart, addItemToCart, removeItemToCart } = useShoppingCart();
+
+  const { isLoading, mutate } = useMutation(async (product: Producto) => {
+    await addItemToCart(product);
+  });
+
+  const { isLoading: isLoadingRemove, mutate: mutateRemove } = useMutation(
+    async (product: Producto) => {
+      await removeItemToCart(product);
+    }
+  );
+
+  const handleAddClick = (product: Producto) => {
+    mutate(product, {
+      onSuccess: async () => {
+        //
+      },
+    });
   };
 
-  const removeCount = (product: Producto, count: number) => {
+  const handleRemoveClick = (product: Producto, count: number) => {
     if (count === 1) {
       setValidProduct(product);
     } else {
-      removeCarrito(product);
+      mutateRemove(product, {
+        onSuccess: async () => {
+          //
+        },
+      });
     }
   };
 
@@ -50,7 +63,7 @@ export default function TableShoppingCart({
   const totalPrice = () => {
     let total = 0;
 
-    carrito.forEach((item) => {
+    shoppingCart.forEach((item) => {
       total += item.count * item.product.price;
     });
 
@@ -59,11 +72,13 @@ export default function TableShoppingCart({
 
   const [validProduct, setValidProduct] = useState<Producto | null>(null);
 
+  if (isLoading || isLoadingRemove) return <Loading />;
+
   return (
     <>
       <ConfirmModal
         validProduct={validProduct}
-        action={removeCarrito}
+        action={mutateRemove}
         setValidProduct={setValidProduct}
       />
       <TableContainer component={Paper}>
@@ -78,7 +93,7 @@ export default function TableShoppingCart({
             </TableRow>
           </TableHead>
           <TableBody>
-            {carrito.map(({ count, product }, index) => (
+            {shoppingCart.map(({ count, product }, index) => (
               <TableRow key={index} sx={{ "&:last-child td, &:last-child th": { border: 0 } }}>
                 <TableCell component="th" scope="row">
                   <img
@@ -103,16 +118,18 @@ export default function TableShoppingCart({
                   <Stack direction="row" justifyContent="space-between" alignItems="center">
                     <IconButton
                       color="primary"
-                      onClick={() => removeCount(product, count)}
+                      onClick={() => handleRemoveClick(product, count)}
                       component="label"
                     >
                       <RemoveCircleIcon />
                     </IconButton>
                     {count}
                     <IconButton
-                      disabled={calcularStock(product._id, product.countInStock, carrito) === 0}
+                      disabled={
+                        calcularStock(product._id, product.countInStock, shoppingCart) === 0
+                      }
                       color="primary"
-                      onClick={() => addCount(product)}
+                      onClick={() => handleAddClick(product)}
                       component="label"
                     >
                       <AddCircleIcon />
@@ -141,13 +158,6 @@ export default function TableShoppingCart({
               </TableCell>
             </TableRow>
           </TableBody>
-          {/* <TableFooter sx={{ backgroundColor: "red" }}>
-          <Stack sx={{ bgColor: "red" }}>
-            <Typography align="center" variant="button">
-              Total Price: {}
-            </Typography>
-          </Stack>
-        </TableFooter> */}
         </Table>
       </TableContainer>
     </>
