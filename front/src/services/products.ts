@@ -1,14 +1,28 @@
+import { useQuery } from "@tanstack/react-query";
 import { Producto } from "../types/Producto";
 import { API } from "./API";
 
-export const getProducts = async () => {
+const getProductsAPI = async () => {
   const { data } = await API.get<Producto[]>(`/products`);
 
   return data;
 };
 
-export const getProductByID = async (productID: number) => {
+const getProductByIDAPI = async (productID: number) => {
   const { data } = await API.get<Producto>(`/products/${productID}`);
 
   return data;
 };
+
+const Products = {
+  GetProducts: () => {
+    return useQuery(["Products"], () => getProductsAPI());
+  },
+  GetProductById: (id: number) => {
+    return useQuery(["Products", id], () => getProductByIDAPI(id), {
+      enabled: Boolean(id) && id > 0,
+    });
+  },
+};
+
+export default Products;

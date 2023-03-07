@@ -4,15 +4,14 @@ import CardContent from "@mui/material/CardContent";
 import CardMedia from "@mui/material/CardMedia";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
-import { useContext, useEffect, useState } from "react";
-import { getProductByID } from "../services/products";
 import Loading from "../components/loading/Loading";
 import { useParams } from "react-router-dom";
 import { Grid } from "@mui/material";
 import { Container, Stack } from "@mui/system";
-import { ProductContext } from "../context/ProductContext";
 import { ItemCarrito } from "../types/ItemCarrito";
 import { Producto } from "../types/Producto";
+import Products from "../services/products";
+import { useShoppingCart } from "../context/useShoppingCart";
 
 export const calcularStock = (id: number, countInStock: number, carrito: ItemCarrito[]) => {
   let count = countInStock;
@@ -27,25 +26,14 @@ export const calcularStock = (id: number, countInStock: number, carrito: ItemCar
 };
 
 export default function Product() {
-  const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [product, setProduct] = useState<Producto | null>(null);
   const { id } = useParams();
+  // const { carrito, addCarrito } = useContext(ProductContext);
+  const { shoppingCart, addItemToCart } = useShoppingCart();
+  const { isLoading, data: product } = Products.GetProductById(+(id ?? -1));
   const { _id, name, image, description, countInStock } = product ?? {};
-  const { carrito, addCarrito } = useContext(ProductContext);
-
-  const getProductByIdAsync = async (id: number) => {
-    setIsLoading(true);
-    const data = await getProductByID(id);
-    setProduct(data);
-    setIsLoading(false);
-  };
-
-  useEffect(() => {
-    getProductByIdAsync(+(id ?? -1));
-  }, [id]);
 
   const onClickAddCart = (product: Producto) => {
-    addCarrito(product);
+    addItemToCart(product);
   };
 
   if (isLoading) return <Loading />;
@@ -74,14 +62,14 @@ export default function Product() {
                   {description}
                 </Typography>
                 <Typography variant="body2" color="text.primary">
-                  Stock: {calcularStock(_id, countInStock, carrito)}
+                  Stock: {calcularStock(_id, countInStock, shoppingCart)}
                 </Typography>
               </Stack>
             </CardContent>
             <CardActions>
               <Button
                 size="small"
-                disabled={calcularStock(_id, countInStock, carrito) === 0}
+                disabled={calcularStock(_id, countInStock, shoppingCart) === 0}
                 onClick={() => onClickAddCart(product)}
               >
                 Add item to cart

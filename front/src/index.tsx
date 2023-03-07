@@ -1,17 +1,11 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import "./index.css";
-import { BrowserRouter } from "react-router-dom";
-import AppRouter from "./layout/AppRouter";
-import ProductProvider from "./context/ProductContext";
+import Main from "./layout/Main";
 
 ReactDOM.render(
   <React.StrictMode>
-    <BrowserRouter>
-      <ProductProvider>
-        <AppRouter />
-      </ProductProvider>
-    </BrowserRouter>
+    <Main />
   </React.StrictMode>,
   document.getElementById("root")
 );

@@ -1,4 +1,4 @@
-import { createContext, useEffect, useState } from "react";
+import { createContext, useState } from "react";
 import { Producto } from "../types/Producto";
 import { ItemCarrito } from "../types/ItemCarrito";
 
@@ -25,9 +25,9 @@ const ProductProvider = ({ children }: ProductProviderProps) => {
     lsCarrito != null ? JSON.parse(lsCarrito) : []
   );
 
-  useEffect(() => {
-    localStorage.setItem(_PRODUCT_LOCALSTORAGE, JSON.stringify(carrito));
-  }, [carrito, setCarrito]);
+  // useEffect(() => {
+  //   localStorage.setItem(_PRODUCT_LOCALSTORAGE, JSON.stringify(carrito));
+  // }, [carrito, setCarrito]);
 
   const addCarrito = (product: Producto) => {
     const copyCarrito = [...carrito];

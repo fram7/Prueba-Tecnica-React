@@ -1,14 +1,16 @@
 import { AppBar, Badge, Box, IconButton, Toolbar, Typography } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-import { useContext } from "react";
-import { ProductContext } from "../context/ProductContext";
+// import { useContext } from "react";
+// import { ProductContext } from "../context/ProductContext";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import { ItemCarrito } from "../types/ItemCarrito";
+import { useShoppingCart } from "../context/useShoppingCart";
 
 export default function Header() {
   const navigate = useNavigate();
 
-  const { carrito } = useContext(ProductContext);
+  // const { carrito } = useContext(ProductContext);
+  const { shoppingCart } = useShoppingCart();
 
   const contarCarritos = (carrito: ItemCarrito[]) => {
     let count = 0;
@@ -40,7 +42,7 @@ export default function Header() {
               navigate("/carrito");
             }}
           >
-            <Badge badgeContent={contarCarritos(carrito)} color="secondary">
+            <Badge badgeContent={contarCarritos(shoppingCart)} color="secondary">
               <ShoppingCartIcon />
             </Badge>
           </IconButton>
