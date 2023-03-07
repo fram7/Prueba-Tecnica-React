@@ -1,14 +1,19 @@
 import Typography from "@mui/material/Typography";
 import { Button, Card, CardActions, CardContent, CardMedia, Grid } from "@mui/material";
 import { useNavigate } from "react-router-dom";
+import { Producto } from "../../types/Producto";
 
-export default function ProductHeader({ product }) {
+interface ProductHeaderProps {
+  product: Producto;
+}
+
+export default function ProductHeader({ product }: ProductHeaderProps) {
   const navigate = useNavigate();
 
   const { _id, name, image } = product;
 
   return (
-    <Grid item key={Card} xs={12} sm={6} md={4}>
+    <Grid item xs={12} sm={6} md={4}>
       <Card sx={{ height: "100%", display: "flex", flexDirection: "column" }}>
         <CardMedia
           component="img"

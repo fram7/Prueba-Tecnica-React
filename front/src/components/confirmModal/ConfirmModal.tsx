@@ -4,11 +4,18 @@ import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
+import { Producto } from "../../types/Producto";
 
-export default function ConfirmModal({ validProduct, accion, setValidProduct }) {
+interface ConfirmModalProps {
+  validProduct: Producto | null;
+  action: Function;
+  setValidProduct: Function;
+}
+
+export default function ConfirmModal({ validProduct, action, setValidProduct }: ConfirmModalProps) {
   const handleYes = () => {
     setValidProduct(null);
-    accion(validProduct);
+    action(validProduct);
   };
 
   const handleNo = () => {

@@ -1,8 +1,13 @@
 import { Grid } from "@mui/material";
 import { Container } from "@mui/system";
 import ProductHeader from "./ProductHeader";
+import { Producto } from "../../types/Producto";
 
-export default function ListProducts({ products }) {
+interface ListProductsProps {
+  products: Producto[];
+}
+
+export default function ListProducts({ products }: ListProductsProps) {
   return (
     <>
       <Container maxWidth="md" component="main">

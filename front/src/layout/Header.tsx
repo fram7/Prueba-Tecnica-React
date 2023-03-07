@@ -3,13 +3,14 @@ import { useNavigate } from "react-router-dom";
 import { useContext } from "react";
 import { ProductContext } from "../context/ProductContext";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
+import { ItemCarrito } from "../types/ItemCarrito";
 
 export default function Header() {
   const navigate = useNavigate();
 
   const { carrito } = useContext(ProductContext);
 
-  const contarCarritos = (carrito) => {
+  const contarCarritos = (carrito: ItemCarrito[]) => {
     let count = 0;
 
     carrito.forEach((item) => {

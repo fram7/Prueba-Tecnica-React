@@ -3,7 +3,7 @@ import Home from "../pages/Home";
 import Product from "../pages/Product";
 import Carrito from "../pages/Carrito";
 import { Box, Grid } from "@mui/material";
-import Header from "../layout/Header";
+import Header from "./Header";
 
 export default function AppRouter() {
   return (

@@ -14,13 +14,26 @@ import RemoveCircleIcon from "@mui/icons-material/RemoveCircle";
 import { calcularStock } from "../../pages/Product";
 import ConfirmModal from "../confirmModal/ConfirmModal";
 import { useState } from "react";
+import { Producto } from "../../types/Producto";
+import { ItemCarrito } from "../../types/ItemCarrito";
+import { typeProductContext } from "../../context/ProductContext";
 
-export default function TableShoppingCart({ carrito, addCarrito, removeCarrito }) {
-  const addCount = (product) => {
+interface TableShoppingCartProps {
+  carrito: ItemCarrito[];
+  addCarrito: (product: Producto) => void;
+  removeCarrito: (product: Producto) => void;
+}
+
+export default function TableShoppingCart({
+  carrito,
+  addCarrito,
+  removeCarrito,
+}: TableShoppingCartProps) {
+  const addCount = (product: Producto) => {
     addCarrito(product);
   };
 
-  const removeCount = (product, count) => {
+  const removeCount = (product: Producto, count: number) => {
     if (count === 1) {
       setValidProduct(product);
     } else {
@@ -30,7 +43,7 @@ export default function TableShoppingCart({ carrito, addCarrito, removeCarrito }
 
   const TAX_RATE = 0.19;
 
-  function ccyFormat(num) {
+  function ccyFormat(num: number) {
     return `${num.toFixed(2)}`;
   }
 
@@ -44,13 +57,13 @@ export default function TableShoppingCart({ carrito, addCarrito, removeCarrito }
     return total;
   };
 
-  const [validProduct, setValidProduct] = useState(null);
+  const [validProduct, setValidProduct] = useState<Producto | null>(null);
 
   return (
     <>
       <ConfirmModal
         validProduct={validProduct}
-        accion={removeCarrito}
+        action={removeCarrito}
         setValidProduct={setValidProduct}
       />
       <TableContainer component={Paper}>
