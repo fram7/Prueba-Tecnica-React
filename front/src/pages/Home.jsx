@@ -1,13 +1,28 @@
-import React from "react";
-import ProductList from "../components/ProductList";
+import { useEffect, useState } from "react";
+import Loading from "../components/loading/Loading";
+import { getProducts } from "../services/products";
+import ListProducts from "../components/product/ListProducts";
 
-const Home = () => {
+export default function Home() {
+  const [isLoading, setIsLoading] = useState(false);
+  const [products, setProducts] = useState([]);
+
+  const getProductsAsync = async () => {
+    setIsLoading(true);
+    const data = await getProducts();
+    setProducts(data);
+    setIsLoading(false);
+  };
+
+  useEffect(() => {
+    getProductsAsync();
+  }, []);
+
+  if (isLoading) return <Loading />;
+
   return (
     <>
-      <h2 className="m-y">Category</h2>
-      <ProductList />
+      <ListProducts products={products} />
     </>
   );
-};
-
-export default Home;
+}
